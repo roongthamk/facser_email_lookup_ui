@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Email Lookup</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      margin: 20px;
+    }
+
+    input {
+      width: 100%;
+      max-width: 400px;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .result {
+      margin-top: 15px;
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Email Lookup</h2>
+
+<p>Type a name to search approved emails</p>
+
+<input id="searchBox" placeholder="Enter name...">
+<button onclick="search()">Search</button>
+
+<div id="results"></div>
+
+<script>
+
+const API_URL =
+  "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+function search() {
+
+  const text =
+    document.getElementById("searchBox").value;
+
+  fetch(API_URL + "?name=" + encodeURIComponent(text))
+    .then(res => res.json())
+    .then(data => display(data))
+    .catch(err => {
+      document.getElementById("results").innerHTML =
+        "<p>Error loading data</p>";
+      console.error(err);
+    });
+
+}
+
+function display(results) {
+
+  let html = "";
+
+  if (!results || results.length === 0) {
+    html = "<p>No results found</p>";
+  } else {
+
+    results.forEach(r => {
+
+      html += "<div class='result'>";
+      html += "<b>" + r.name + "</b><br><br>";
+
+      r.emails.forEach(e => {
+        html += "• " + e + "<br>";
+      });
+
+      html += "</div>";
+
+    });
+
+  }
+
+  document.getElementById("results").innerHTML = html;
+}
+
+</script>
+
+</body>
+</html>
